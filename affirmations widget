@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Daily Affirmation</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #fdf6f0;
+      color: #444;
+      text-align: center;
+      padding: 1rem;
+    }
+    #affirmation {
+      font-size: 1.5rem;
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div id="affirmation">Loading affirmation...</div>
+
+  <script>
+    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQNjefjayRF-WCdsYme6zgczWBSTBD9-G0jEPCcT8gmsMr5bYi6Jlz9-OfumRC02hrWGLS2ADrI0y6R/pub?output=csv';
+
+    fetch(sheetUrl)
+      .then(response => response.text())
+      .then(csvText => {
+        const lines = csvText.trim().split('\n');
+        lines.shift(); // Remove header
+        const today = new Date().getDate();
+        const affirmation = lines[today % lines.length];
+        document.getElementById('affirmation').textContent = affirmation;
+      })
+      .catch(error => {
+        document.getElementById('affirmation').textContent = "Could not load affirmation.";
+        console.error(error);
+      });
+  </script>
+</body>
+</html>
